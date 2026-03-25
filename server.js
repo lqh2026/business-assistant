@@ -100,6 +100,15 @@ ${context || '（暂无搜索结果，请基于你的知识回答）'}
         }
 
         const data = await response.json();
+        
+        // 打印完整返回数据用于调试
+        console.log('MiniMax API 返回:', JSON.stringify(data, null, 2));
+        
+        // 检查 API 返回的数据结构
+        if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+            return res.status(500).json({ error: data.error_msg || data.error_message || 'API 返回数据格式异常' });
+        }
+        
         res.json({ success: true, answer: data.choices[0].message.content });
     } catch (error) {
         console.error('MiniMax API 错误:', error);
